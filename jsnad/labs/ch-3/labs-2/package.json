@@ -1,0 +1,6 @@
+{
+  "name": "labs-2",
+  "scripts": {
+    "start": "nodemon --inspect server.js"
+  }
+}
