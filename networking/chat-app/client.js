@@ -1,6 +1,8 @@
 import net from 'node:net'
 import readline from "readline/promises";
 
+let id;
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -11,11 +13,18 @@ const socket = net.createConnection({port: 3000, host: 'localhost'}, async () =>
 })
 
 socket.on('data', async (data) => {
+    const message = data.toString();
     console.log()
     await moveCursor(0, -1);
     await clearLine();
-    console.log(data.toString())
-    await ask()
+
+    if (/^(id-)/g.test(message)) {
+        id = message.replace('id-', '');
+        console.log('your id is ', id);
+    } else {
+        console.log(message)
+        await ask()
+    }
 })
 
 socket.on('end', () => {
@@ -28,7 +37,7 @@ async function ask() {
     await clearLine();
     await moveCursor(0, -1);
     await clearLine();
-    socket.write(message)
+    socket.write(`id-${id}-message-${message}`)
 }
 
 function clearLine() {
